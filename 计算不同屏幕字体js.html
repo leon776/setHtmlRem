@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>自动计算字体</title>
+    <meta name="description" content="px转rem" />
+    <meta name="author" content="xiaoweili" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+    @media only screen and (max-width: 1080px),only screen and (max-width:1080px) {
+	    html,body {
+	        font-size:33.75px
+	    }
+	}
+	@media only screen and (max-width: 960px),only screen and (max-width:960px) {
+	    html,body {
+	        font-size:30px
+	    }
+	}
+	@media only screen and (max-width: 720px),only screen and (max-width:720px) {
+	    html,body {
+	        font-size:22.5px
+	    }
+	}
+	@media only screen and (max-device-width: 640px),only screen and (max-width:640px) {
+	    html,body {
+	        font-size:20px
+	    }
+	}
+	@media only screen and (max-device-width: 540px),only screen and (max-width:540px) {
+	    html,body {
+	        font-size:16.875px
+      }
+	}
+	@media only screen and (max-device-width: 480px),only screen and (max-width:480px) {
+	    html,body {
+	        font-size:15px
+	    }
+	}
+	@media only screen and (max-width: 400px) {
+	    html,body {
+	        font-size:12.5px
+	    }
+	}
+	@media only screen and (max-width: 360px),only screen and (max-width:320px) {
+	    html,body {
+	        font-size:11.25px
+	    }
+	}
+	@media only screen and (max-width: 320px),only screen and (max-device-width:320px) {
+	    html,body {
+	        font-size:10px
+	    }
+	}
+	</style>
+    <style type="text/css">
+		*{padding: 0;margin: 0}
+		.demo{
+			width: 10rem;
+			height: 10rem;
+			font-size: 1rem;
+			background: #ff0000;
+		}
+    </style>
+</head>
+<body>
+<div class="warp">
+	<div class="demo">
+		<p>width:10rem</p>
+		<p>height:10rem</p>
+	</div>
+<div style="width:100%;font-size:14px;">
+<pre>
+!function() {
+   var count = 0;
+   /*
+      # 按照比例设定html字体
+      # 说明：
+         - 请使用css适配主流屏幕宽度
+         - setTimeout是为了准确获取屏幕实际渲染宽度，会造成闪动（本例中是先将body隐藏，字体计算好了之后再显示）
+         - 精确到小数点后三位
+         - baseWidth是设计稿宽度，baseFontSize是baseWidth下计算时所使用的rem对应的px值，比如本例中640下1rem=20px
+   */
+   function setHtmlFontSize() {
+      var baseWidth = 640, baseFontSize = 20, newSize = 0;
+       newSize = parseInt( (window.innerWidth / baseWidth) * 10000 * baseFontSize ) / 10000;
+       //如果css已经兼容当前分辨率就不管了
+       if(newSize + 'px' === getComputedStyle(document.documentElement)['font-size'] 
+          || Math.floor(newSize) + 'px' === getComputedStyle(document.documentElement)['font-size']
+          || Math.ceil(newSize) + 'px' === getComputedStyle(document.documentElement)['font-size'] ) {
+         return false;
+       }
+       //如果此时屏幕宽度不准确，就尝试再次获取分辨率，只尝试10次，否则使用innerWidth计算
+      if(document.body.clientWidth !== window.innerWidth && count < 10) {
+         document.body.style.display = "none";
+         window.setTimeout(setHtmlFontSize, 0);
+         count++;
+      } else {
+         document.body.style.display = "none";
+         setTimeout(function() {
+            document.body.style.display = "";
+            document.documentElement.style.fontSize = parseInt( (window.innerWidth / baseWidth) * 10000 * baseFontSize ) / 10000 + "px";
+         }, 0);
+      }
+   }
+   setHtmlFontSize();
+}();
+</pre>
+</div>
+<script type="text/javascript">
+!function() {
+   var count = 0;
+   /*
+      # 按照比例设定html字体
+      # 说明：
+         - 请使用css适配主流屏幕宽度
+         - setTimeout是为了准确获取屏幕实际渲染宽度，会造成闪动（本例中是先将body隐藏，字体计算好了之后再显示）
+         - 精确到小数点后三位
+         - baseWidth是设计稿宽度，baseFontSize是baseWidth下计算时所使用的rem对应的px值，比如本例中640下1rem=20px
+   */
+   function setHtmlFontSize(callback) {
+      var baseWidth = 640, baseFontSize = 20, newSize = 0;
+       newSize = parseInt( (window.innerWidth / baseWidth) * 10000 * baseFontSize ) / 10000;
+       //如果css已经兼容当前分辨率就不管了
+       if(newSize + 'px' === getComputedStyle(document.documentElement)['font-size'] 
+          || Math.floor(newSize) + 'px' === getComputedStyle(document.documentElement)['font-size']
+          || Math.ceil(newSize) + 'px' === getComputedStyle(document.documentElement)['font-size'] ) {
+         return false;
+       }
+       //如果此时屏幕宽度不准确，就尝试再次获取分辨率，只尝试10次，否则使用innerWidth计算
+      if(document.body.clientWidth !== window.innerWidth && count < 10) {
+         document.body.style.display = "none";
+         window.setTimeout(setHtmlFontSize, 0);
+         count++;
+      } else {
+         document.body.style.display = "none";
+         setTimeout(function() {
+            document.body.style.display = "";
+            if(callback) {
+              callback();
+            }
+            document.documentElement.style.fontSize = parseInt( (window.innerWidth / baseWidth) * 10000 * baseFontSize ) / 10000 + "px";
+         }, 0);
+      }
+   }
+   setHtmlFontSize();
+}();
+</script>
+</body>
+</html>
