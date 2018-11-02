@@ -7,5 +7,5 @@
       callback: 字体计算之后的回调函数，可选
     }
     # return Boolean;
-    # xiaoweili@tencent.com
+    # archlichxw@gmail.com
     # ps:请尽量第一时间运行此js计算字体
